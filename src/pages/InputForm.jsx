@@ -284,7 +284,7 @@ const InputForm = forwardRef((props, ref) => {
       </Row>
 
       {/* 顧客選択モーダル */}
-      <Modal show={showCustomerModal} onHide={() => setShowCustomerModal(false)} size="lg" centered>
+      <Modal show={showCustomerModal} onHide={() => setShowCustomerModal(false)} size="xl" centered>
         <Modal.Header closeButton>
           <Modal.Title>顧客・商品の選択</Modal.Title>
         </Modal.Header>

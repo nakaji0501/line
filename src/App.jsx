@@ -5,6 +5,7 @@ import InputForm from './pages/InputForm';
 import TopPage from './pages/TopPage';
 import ShyoushoPage from './pages/ShyoushoPage';
 import KakuhoPage from './pages/KakuhoPage';
+import DataAddPage from './pages/DataAddPage'; // DataAddPageをインポート
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -27,8 +28,8 @@ const AppContent = () => {
             <Nav.Link as={Link} to="/">TOP</Nav.Link>
             <Nav.Link as={Link} to="/new">新規</Nav.Link>
             <Nav.Link as={Link} to="/shyousho">仕様書</Nav.Link>
+            <Nav.Link as={Link} to="/data-add">データ追加</Nav.Link>
             <Nav.Link as={Link} to="/kakuho1">拡張1</Nav.Link>
-            <Nav.Link as={Link} to="/kakuho2">拡張2</Nav.Link>
           </Nav>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
@@ -36,8 +37,8 @@ const AppContent = () => {
               <Nav.Link as={Link} to="/">TOP</Nav.Link>
               <Nav.Link as={Link} to="/new">新規</Nav.Link>
               <Nav.Link as={Link} to="/shyousho">仕様書</Nav.Link>
+              <Nav.Link as={Link} to="/data-add">データ追加</Nav.Link>
               <Nav.Link as={Link} to="/kakuho1">拡張1</Nav.Link>
-              <Nav.Link as={Link} to="/kakuho2">拡張2</Nav.Link>
             </Nav>
             {location.pathname === '/new' && (
               <Button variant="success" onClick={handleSave} className="ms-auto">保存</Button>
@@ -51,8 +52,8 @@ const AppContent = () => {
           <Route path="/" element={<TopPage />} />
           <Route path="/new" element={<InputForm ref={formRef} />} />
           <Route path="/shyousho" element={<ShyoushoPage />} />
+          <Route path="/data-add" element={<DataAddPage />} />
           <Route path="/kakuho1" element={<KakuhoPage pageName="拡張1" />} />
-          <Route path="/kakuho2" element={<KakuhoPage pageName="拡張2" />} />
         </Routes>
       </Container>
     </div>
