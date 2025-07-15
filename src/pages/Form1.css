@@ -1,0 +1,877 @@
+.Form1 {
+  position: relative;
+  width: 2884px; /* VB.NETのClientSize.Width */
+  height: 940px; /* VB.NETのClientSize.Height */
+  overflow: auto; /* 必要に応じてスクロールバーを表示 */
+  background-color: SystemColors.Control; /* VB.NETのデフォルト背景色 */
+  font-family: "HG丸ｺﾞｼｯｸM-PRO", "MS UI Gothic", sans-serif; /* VB.NETのフォントを参考に */
+}
+
+/* 各コントロールのスタイル */
+/* Label */
+.Label_kensahuryou {
+  position: absolute;
+  left: 1226px;
+  top: 748px;
+  font-size: 21.75pt;
+  font-weight: bold;
+}
+.Label_bikou {
+  position: absolute;
+  left: 56px;
+  top: 1516px;
+  font-size: 20.25pt;
+  font-weight: bold;
+}
+.Label_huryoukei_kakou {
+  position: absolute;
+  left: 1794px;
+  top: 1516px;
+  font-size: 20.25pt;
+  font-weight: bold;
+  visibility: hidden; /* Visible = False */
+}
+.Label_huryoukei_insatu {
+  position: absolute;
+  left: 1794px;
+  top: 1438px;
+  font-size: 20.25pt;
+  font-weight: bold;
+  visibility: hidden; /* Visible = False */
+}
+.Label_huryoukei_insatu_sum {
+  position: absolute;
+  left: 2206px;
+  top: 1438px;
+  font-size: 20.25pt;
+  font-weight: bold;
+  visibility: hidden; /* Visible = False */
+}
+.Label_huryoukei_kakou_sum {
+  position: absolute;
+  left: 2206px;
+  top: 1516px;
+  font-size: 20.25pt;
+  font-weight: bold;
+  visibility: hidden; /* Visible = False */
+}
+.Label_seisansuu {
+  position: absolute;
+  left: 904px;
+  top: 1724px;
+  font-size: 20.25pt;
+  font-weight: bold;
+}
+.Label_seisansuu_kan {
+  position: absolute;
+  left: 1525px;
+  top: 1796px;
+  font-size: 20.25pt;
+  font-weight: bold;
+}
+.Label_sokomakihuryou {
+  position: absolute;
+  left: 67px;
+  top: 6px;
+  font-size: 20.25pt;
+}
+.Label_sokoryou_2 {
+  position: absolute;
+  left: 67px;
+  top: 6px;
+  font-size: 20.25pt;
+}
+.Label_doukizu_2 {
+  position: absolute;
+  left: 67px;
+  top: 6px;
+  font-size: 20.25pt;
+}
+.Label_douinsatu_2 {
+  position: absolute;
+  left: 67px;
+  top: 6px;
+  font-size: 20.25pt;
+}
+.Label_sonota_2 {
+  position: absolute;
+  left: 67px;
+  top: 6px;
+  font-size: 20.25pt;
+}
+.Label_lineNo {
+  position: absolute;
+  left: 17px;
+  top: 56px;
+  font-size: 15.75pt;
+  font-weight: bold;
+}
+.Label_kokyaku {
+  position: absolute;
+  left: 546px;
+  top: 52px;
+  font-size: 16.125pt;
+  font-weight: bold;
+}
+.Label_sama {
+  position: absolute;
+  left: 1142px;
+  top: 54px;
+  font-size: 15.75pt;
+  font-weight: bold;
+}
+.Label_syouhinmei {
+  position: absolute;
+  left: 1239px;
+  top: 54px;
+  font-size: 15.75pt;
+  font-weight: bold;
+}
+.Label_katagaekan {
+  position: absolute;
+  left: 15px;
+  top: 288px;
+  font-size: 21.75pt;
+  font-weight: bold;
+}
+.Label_tyouseikan_kan {
+  position: absolute;
+  left: 308px;
+  top: 552px;
+  font-size: 12pt;
+  font-weight: bold;
+  visibility: hidden; /* Visible = False */
+}
+.Label_dounomi {
+  position: absolute;
+  left: 37px;
+  top: 392px;
+  font-size: 12pt;
+  font-weight: bold;
+}
+.Label_dousoko {
+  position: absolute;
+  left: 37px;
+  top: 468px;
+  font-size: 12pt;
+  font-weight: bold;
+}
+.Label_tyouseikan_sum {
+  position: absolute;
+  left: 228px;
+  top: 552px;
+  font-size: 12pt;
+  font-weight: bold;
+  visibility: hidden; /* Visible = False */
+}
+.Label_sentouin {
+  position: absolute;
+  left: 17px;
+  top: 174px;
+  font-size: 15.75pt;
+  font-weight: bold;
+}
+.Label_sentouin_sum {
+  position: absolute;
+  left: 535px;
+  top: 170px;
+  font-size: 12pt;
+  font-weight: bold;
+}
+.Label_kensain {
+  position: absolute;
+  left: 1239px;
+  top: 174px;
+  font-size: 15.75pt;
+  font-weight: bold;
+}
+.Label_kensain_sum {
+  position: absolute;
+  left: 1762px;
+  top: 172px;
+  font-size: 12pt;
+  font-weight: bold;
+}
+.Label_sonota_1 {
+  position: absolute;
+  left: 1231px;
+  top: 538px;
+  font-size: 12pt;
+  font-weight: bold;
+}
+.Label_hutahuryou {
+  position: absolute;
+  left: 2041px;
+  top: 564px;
+  font-size: 12pt;
+  font-weight: bold;
+}
+.Label_doukizu_1 {
+  position: absolute;
+  left: 535px;
+  top: 538px;
+  font-size: 12pt;
+  font-weight: bold;
+}
+.Label_douinsatu_1 {
+  position: absolute;
+  left: 535px;
+  top: 390px;
+  font-size: 12pt;
+  font-weight: bold;
+}
+.Label_douinsatu1_sum {
+  position: absolute;
+  left: 1116px;
+  top: 382px;
+  font-size: 19.875pt;
+  font-weight: bold;
+}
+.Label_doukizu1_sum {
+  position: absolute;
+  left: 1116px;
+  top: 524px;
+  font-size: 19.875pt;
+  font-weight: bold;
+}
+.Label_sokohuryou1_sum {
+  position: absolute;
+  left: 1814px;
+  top: 380px;
+  font-size: 19.875pt;
+  font-weight: bold;
+}
+.Label_sonota1_sum {
+  position: absolute;
+  left: 1814px;
+  top: 522px;
+  font-size: 19.875pt;
+  font-weight: bold;
+}
+.Label_hutahuryou_sum {
+  position: absolute;
+  left: 2674px;
+  top: 560px;
+  font-size: 19.875pt;
+  font-weight: bold;
+}
+.Label_sokohuryou_1 {
+  position: absolute;
+  left: 1233px;
+  top: 392px;
+  font-size: 12pt;
+  font-weight: bold;
+}
+.Label_siyousuu {
+  position: absolute;
+  left: 1712px;
+  top: 1452px;
+  font-size: 20.25pt;
+  font-weight: bold;
+}
+.Label_siyousuu_dou {
+  position: absolute;
+  left: 1749px;
+  top: 1556px;
+  font-size: 20.25pt;
+  font-weight: bold;
+}
+.Label_siyousuu_soko {
+  position: absolute;
+  left: 1749px;
+  top: 1640px;
+  font-size: 20.25pt;
+  font-weight: bold;
+}
+.Label_siyousuu_huta {
+  position: absolute;
+  left: 1749px;
+  top: 1724px;
+  font-size: 20.25pt;
+  font-weight: bold;
+}
+.Label_siyousuu_dou_sum {
+  position: absolute;
+  left: 1911px;
+  top: 1556px;
+  font-size: 20.25pt;
+  font-weight: bold;
+}
+.Label_siyousuu_soko_sum {
+  position: absolute;
+  left: 1911px;
+  top: 1640px;
+  font-size: 20.25pt;
+  font-weight: bold;
+}
+.Label_siyousuu_huta_sum {
+  position: absolute;
+  left: 1911px;
+  top: 1724px;
+  font-size: 20.25pt;
+  font-weight: bold;
+}
+.Label_touzitusiyousuu_comment {
+  position: absolute;
+  left: 1766px;
+  top: 1516px;
+  font-size: 8pt;
+}
+.Label_Trouble {
+  position: absolute;
+  left: 13px;
+  top: 1846px;
+  font-size: 12pt;
+}
+.Label_Trouble_Count {
+  position: absolute;
+  left: 156px;
+  top: 1846px;
+  font-size: 12pt;
+}
+.Label1 {
+  position: absolute;
+  left: 2866px;
+  top: 1856px;
+  font-size: 8pt;
+}
+.Label_huryoukei_syoki_sum {
+  position: absolute;
+  left: 2206px;
+  top: 1596px;
+  font-size: 20.25pt;
+  font-weight: bold;
+  visibility: hidden; /* Visible = False */
+}
+.Label_huryoukei_syoki {
+  position: absolute;
+  left: 1794px;
+  top: 1596px;
+  font-size: 20.25pt;
+  font-weight: bold;
+  visibility: hidden; /* Visible = False */
+}
+.Label_yoteisuu {
+  position: absolute;
+  left: 904px;
+  top: 1516px;
+  font-size: 19.875pt;
+  font-weight: bold;
+}
+.Label_kuuran {
+  position: absolute;
+  left: 61px;
+  top: 590px;
+  visibility: hidden; /* Visible = False */
+}
+
+/* RichTextBox (Input) */
+.RichTextBox_bikou {
+  position: absolute;
+  left: 65px;
+  top: 1596px;
+  width: 676px;
+  height: 238px;
+  font-size: 18pt;
+}
+.RichTextBox_seisansuu {
+  position: absolute;
+  left: 1140px;
+  top: 1656px;
+  width: 374px;
+  height: 196px;
+  font-size: 20.25pt;
+}
+.RichTextBox_syouhinmei {
+  position: absolute;
+  left: 1417px;
+  top: 32px;
+  width: 845px;
+  height: 88px;
+  font-size: 22.125pt;
+}
+.RichTextBox_sonota1 {
+  position: absolute;
+  left: 1378px;
+  top: 514px;
+  width: 156px;
+  height: 70px;
+  font-size: 18pt;
+}
+.RichTextBox_sokohuryou1 {
+  position: absolute;
+  left: 1378px;
+  top: 370px;
+  width: 156px;
+  height: 70px;
+  font-size: 18pt;
+}
+.RichTextBox_doukizu1 {
+  position: absolute;
+  left: 685px;
+  top: 514px;
+  width: 156px;
+  height: 72px;
+  font-size: 18pt;
+}
+.RichTextBox_douinsatu1 {
+  position: absolute;
+  left: 685px;
+  top: 370px;
+  width: 156px;
+  height: 76px;
+  font-size: 18pt;
+}
+.RichTextBox_hutahuryou {
+  position: absolute;
+  left: 2214px;
+  top: 552px;
+  width: 156px;
+  height: 70px;
+  font-size: 18pt;
+}
+.RichTextBox_yoteisuu {
+  position: absolute;
+  left: 1140px;
+  top: 1462px;
+  width: 333px;
+  height: 140px;
+  font-size: 20.25pt;
+}
+.RichTextBox_kokyaku {
+  position: absolute;
+  left: 708px;
+  top: 28px;
+  width: 433px;
+  height: 92px;
+  font-size: 22.125pt;
+}
+.RichTextBox_dousoko {
+  position: absolute;
+  left: 221px;
+  top: 452px;
+  width: 156px;
+  height: 58px;
+  font-size: 14.25pt;
+}
+.RichTextBox_dounomi {
+  position: absolute;
+  left: 221px;
+  top: 378px;
+  width: 156px;
+  height: 58px;
+  font-size: 14.25pt;
+}
+
+/* ComboBox */
+.ComboBox_lineNo {
+  position: absolute;
+  left: 269px;
+  top: 40px;
+  width: 210px;
+  height: 72px;
+  font-size: 24pt;
+}
+.ComboBox_sentouin {
+  position: absolute;
+  left: 221px;
+  top: 150px;
+  width: 258px;
+  height: 72px;
+  font-size: 24pt;
+}
+.ComboBox_kensain {
+  position: absolute;
+  left: 1445px;
+  top: 152px;
+  width: 258px;
+  height: 72px;
+  font-size: 24pt;
+}
+
+/* DateTimePicker (Input_date, dtp_start1, dtp_end1) */
+.Input_date {
+  position: absolute;
+  left: 2459px;
+  top: 40px;
+  width: 433px;
+  height: 55px;
+  font-size: 18pt;
+}
+.dtp_start1 {
+  position: absolute;
+  left: 2030px;
+  top: 338px;
+  width: 435px;
+  height: 135px;
+  font-size: 48pt;
+}
+.dtp_end1 {
+  position: absolute;
+  left: 2535px;
+  top: 338px;
+  width: 435px;
+  height: 135px;
+  font-size: 48pt;
+}
+
+/* Buttons */
+.Button_MVVkuji_jump {
+  position: absolute;
+  left: 3025px;
+  top: 150px;
+  width: 59px;
+  height: 248px;
+  font-size: 12pt;
+}
+.Button_sokomakihuryou_minus {
+  position: absolute;
+  left: 377px;
+  top: 276px;
+  width: 152px;
+  height: 140px;
+  font-size: 24pt;
+}
+.Button_sokomakihuryou_plus {
+  position: absolute;
+  left: 39px;
+  top: 122px;
+  width: 325px;
+  height: 300px;
+  font-size: 24pt;
+}
+.Button_sokokizuhekomi_minus {
+  position: absolute;
+  left: 377px;
+  top: 276px;
+  width: 152px;
+  height: 140px;
+  font-size: 24pt;
+}
+.Button_sokokizuhekomi_plus {
+  position: absolute;
+  left: 39px;
+  top: 124px;
+  width: 325px;
+  height: 300px;
+  font-size: 24pt;
+}
+.Button_doukizu2_minus {
+  position: absolute;
+  left: 377px;
+  top: 276px;
+  width: 152px;
+  height: 140px;
+  font-size: 24pt;
+}
+.Button_doukizu2_plus {
+  position: absolute;
+  left: 35px;
+  top: 116px;
+  width: 325px;
+  height: 300px;
+  font-size: 24pt;
+}
+.Button_douinsatu2_minus {
+  position: absolute;
+  left: 373px;
+  top: 276px;
+  width: 152px;
+  height: 140px;
+  font-size: 24pt;
+}
+.Button_douinsatu2_plus {
+  position: absolute;
+  left: 26px;
+  top: 116px;
+  width: 325px;
+  height: 300px;
+  font-size: 24pt;
+}
+.Button_sonota2_minus {
+  position: absolute;
+  left: 373px;
+  top: 276px;
+  width: 152px;
+  height: 140px;
+  font-size: 24pt;
+}
+.Button_sonota2_plus {
+  position: absolute;
+  left: 35px;
+  top: 122px;
+  width: 325px;
+  height: 300px;
+  font-size: 24pt;
+}
+.Button_doukizu1_minus {
+  position: absolute;
+  left: 986px;
+  top: 510px;
+  width: 87px;
+  height: 80px;
+  font-size: 24pt;
+}
+.Button_doukizu1_plus {
+  position: absolute;
+  left: 880px;
+  top: 512px;
+  width: 87px;
+  height: 80px;
+  font-size: 24pt;
+}
+.Button_douinsatu1_plus {
+  position: absolute;
+  left: 880px;
+  top: 370px;
+  width: 87px;
+  height: 80px;
+  font-size: 24pt;
+}
+.Button_douinsatu1_minus {
+  position: absolute;
+  left: 986px;
+  top: 368px;
+  width: 87px;
+  height: 80px;
+  font-size: 24pt;
+}
+.Button_sokohuryou1_minus {
+  position: absolute;
+  left: 1673px;
+  top: 366px;
+  width: 87px;
+  height: 80px;
+  font-size: 24pt;
+}
+.Button_sokohuryou1_plus {
+  position: absolute;
+  left: 1566px;
+  top: 366px;
+  width: 87px;
+  height: 80px;
+  font-size: 24pt;
+}
+.Button_sonota1_plus {
+  position: absolute;
+  left: 1566px;
+  top: 508px;
+  width: 87px;
+  height: 80px;
+  font-size: 24pt;
+}
+.Button_sonota1_minus {
+  position: absolute;
+  left: 1673px;
+  top: 506px;
+  width: 87px;
+  height: 80px;
+  font-size: 24pt;
+}
+.btn_updateView {
+  position: absolute;
+  left: 2247px;
+  top: 1516px;
+  width: 260px;
+  height: 126px;
+  font-size: 13.875pt;
+  background-color: LightSkyBlue; /* VB.NETのBackColor */
+}
+.Button_NyuuryokuReset {
+  position: absolute;
+  left: 3025px;
+  top: 468px;
+  width: 59px;
+  height: 210px;
+  font-size: 12pt;
+}
+.btn_moveToTop {
+  position: absolute;
+  left: 2251px;
+  top: 1708px;
+  width: 256px;
+  height: 126px;
+  font-size: 13.875pt;
+}
+.Button_search_siyousyo {
+  position: absolute;
+  left: 2524px;
+  top: 128px;
+  width: 321px;
+  height: 76px;
+}
+.Btn_Time_Start {
+  position: absolute;
+  left: 2366px;
+  top: 248px;
+  width: 128px;
+  height: 72px;
+}
+.Btn_Time_End {
+  position: absolute;
+  left: 2871px;
+  top: 248px;
+  width: 100px;
+  height: 72px;
+}
+.btn_pageMin {
+  position: absolute;
+  left: 3001px;
+  top: 32px;
+  width: 82px;
+  height: 76px;
+  background-color: SystemColors.ActiveCaption; /* VB.NETのBackColor */
+}
+
+/* Panels (Defect Counters) */
+.Panel_sokomakihuryou {
+  position: absolute;
+  left: 1896px;
+  top: 850px;
+  width: 554px;
+  height: 478px;
+  border: 1px solid SystemColors.ControlDark; /* FixedSingle */
+  background-color: SystemColors.Control;
+}
+.Panel_sokokizuhekomi {
+  position: absolute;
+  left: 1285px;
+  top: 850px;
+  width: 554px;
+  height: 478px;
+  border: 1px solid SystemColors.ControlDark;
+  background-color: SystemColors.Control;
+}
+.Panel_doukizu2 {
+  position: absolute;
+  left: 672px;
+  top: 850px;
+  width: 554px;
+  height: 478px;
+  border: 1px solid SystemColors.ControlDark;
+  background-color: SystemColors.Control;
+}
+.Panel_douinsatu2 {
+  position: absolute;
+  left: 65px;
+  top: 850px;
+  width: 554px;
+  height: 478px;
+  border: 1px solid SystemColors.ControlDark;
+  background-color: SystemColors.Control;
+}
+.Panel_sonota2 {
+  position: absolute;
+  left: 2507px;
+  top: 850px;
+  width: 554px;
+  height: 478px;
+  border: 1px solid SystemColors.ControlDark;
+  background-color: SystemColors.Control;
+}
+
+/* PictureBox */
+.pb_sobajima {
+  position: absolute;
+  left: 2615px;
+  top: 1492px;
+  width: 464px;
+  height: 354px;
+  object-fit: contain; /* StretchImage */
+}
+
+/* CheckBox */
+.CheckBox_hutahame_check {
+  position: absolute;
+  left: 1770px;
+  top: 1816px;
+  font-size: 13.875pt;
+}
+
+/* TableLayoutPanels (tlp_kensahuryou, tlp_maekoutei) */
+/* これらは複雑なレイアウトのため、別途CSSで詳細に定義するか、Flexbox/Gridで再構築が必要 */
+/* 現状は背景色のみ設定 */
+.tlp_kensahuryou {
+  position: absolute;
+  left: -17px;
+  top: 696px;
+  width: 3178px;
+  height: 708px;
+  background-color: SystemColors.ActiveCaption;
+  border: 1px solid SystemColors.ControlDark; /* CellBorderStyle.Single */
+}
+.tlp_maekoutei {
+  position: absolute;
+  left: 503px;
+  top: 338px;
+  width: 1417px;
+  height: 284px;
+  background-color: SystemColors.ActiveCaption;
+  border: 1px solid SystemColors.ControlDark; /* CellBorderStyle.Single */
+}
+
+/* Panel内のボタンとラベルの位置調整 */
+.Panel_douinsatu2 .Button_douinsatu2_plus {
+  left: 26px;
+  top: 116px;
+}
+.Panel_douinsatu2 .Button_douinsatu2_minus {
+  left: 373px;
+  top: 276px;
+}
+.Panel_douinsatu2 .Label_douinsatu2_sum {
+  left: 423px;
+  top: 24px;
+}
+
+.Panel_doukizu2 .Button_doukizu2_plus {
+  left: 35px;
+  top: 116px;
+}
+.Panel_doukizu2 .Button_doukizu2_minus {
+  left: 377px;
+  top: 276px;
+}
+.Panel_doukizu2 .Label_doukizu2_sum {
+  left: 423px;
+  top: 24px;
+}
+
+.Panel_sokokizuhekomi .Button_sokokizuhekomi_plus {
+  left: 39px;
+  top: 124px;
+}
+.Panel_sokokizuhekomi .Button_sokokizuhekomi_minus {
+  left: 377px;
+  top: 276px;
+}
+.Panel_sokokizuhekomi .Label_sokokizuhekomi_sum {
+  left: 423px;
+  top: 24px;
+}
+
+.Panel_sokomakihuryou .Button_sokomakihuryou_plus {
+  left: 39px;
+  top: 122px;
+}
+.Panel_sokomakihuryou .Button_sokomakihuryou_minus {
+  left: 377px;
+  top: 276px;
+}
+.Panel_sokomakihuryou .Label_sokomakihuryou_sum {
+  left: 423px;
+  top: 24px;
+}
+
+.Panel_sonota2 .Button_sonota2_plus {
+  left: 35px;
+  top: 122px;
+}
+.Panel_sonota2 .Button_sonota2_minus {
+  left: 373px;
+  top: 276px;
+}
+.Panel_sonota2 .Label_sonota2_sum {
+  left: 423px;
+  top: 24px;
+}

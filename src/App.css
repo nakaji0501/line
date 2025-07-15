@@ -1,0 +1,45 @@
+html, body, #root, .App {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* 全体でスクロールを禁止 */
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+}
+
+.container-fluid {
+  overflow-y: auto; /* コンテンツがはみ出た場合のみスクロール */
+}
+
+/* ヘッダーのナビゲーションをタイトルの右に配置 */
+.header-nav-inline {
+  display: flex;
+  align-items: center;
+  margin-left: 20px; /* タイトルからのマージン */
+}
+
+.header-nav-inline .nav-link {
+  font-size: 1.1rem; /* 必要に応じて調整 */
+  padding-left: 0.8rem; /* リンク間のスペース */
+  padding-right: 0.8rem; /* リンク間のスペース */
+}
+
+/* 数値入力の矢印を非表示にする */
+input[type="number"]::-webkit-inner-spin-button, 
+input[type="number"]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox用 */
+}
+
+/* 先頭員と検査員のプルダウン選択肢のスタイル */
+.select-large-options option {
+  font-size: 2.5rem; /* 2.5remに調整 */
+  padding: 20px 10px; /* タッチしやすいようにパディングを維持 */
+}
