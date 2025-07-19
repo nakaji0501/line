@@ -6,7 +6,7 @@ import TopPage from './pages/TopPage';
 import ShyoushoPage from './pages/ShyoushoPage';
 import KakuhoPage from './pages/KakuhoPage';
 import DataAddPage from './pages/DataAddPage'; // DataAddPageをインポート
-import { auth } from './firebaseConfig.jsx';
+import { auth } from './firebaseConfig.js';
 import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth"; // Firebase Auth関連をインポート
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
