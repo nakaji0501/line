@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Button, ListGroup, Card } from 'react-bootstrap';
 
 const hiraganaRows = [
@@ -10,18 +10,20 @@ const hiraganaRows = [
 ];
 
 function CustomerSelect({ onSelectComplete }) {
+  const productCardRef = useRef(null);
   const [productsData, setProductsData] = useState([]);
   const [customersByChar, setCustomersByChar] = useState({});
-  const [fittingTypes, setFittingTypes] = useState([]);
+  const [selectedJishaModel, setSelectedJishaModel] = useState(null); // 自社製品の型名
 
   useEffect(() => {
     fetch('/master_data.json')
       .then(response => response.json())
       .then(data => {
-        setFittingTypes(data.fittingTypes);
         setProductsData(data.productsData);
 
         const newCustomersByChar = {};
+        const jishaModels = new Set(); // 自社製品の型名を収集
+
         data.productsData.forEach(item => {
           const kanaChar = item.かな;
           if (kanaChar) {
@@ -32,8 +34,15 @@ function CustomerSelect({ onSelectComplete }) {
             if (!newCustomersByChar[kanaChar].includes(item.お客様)) {
               newCustomersByChar[kanaChar].push(item.お客様);
             }
+
+            // 「自社」製品の型名を収集
+            if (item.かな === '自社') {
+              jishaModels.add(item.お客様);
+            }
           }
         });
+        // 「自社」のキーに型名リストを設定
+        newCustomersByChar['自社'] = Array.from(jishaModels);
         setCustomersByChar(newCustomersByChar);
       })
       .catch(error => console.error("Error loading master data:", error));
@@ -44,29 +53,77 @@ function CustomerSelect({ onSelectComplete }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   const handleCustomerClick = (customer) => {
-    setSelectedCustomer(customer);
-    setSelectedProduct(null); // 顧客が変わったら商品はリセット
+    if (selectedChar === '自社') {
+      setSelectedJishaModel(customer);
+      setSelectedProduct(null);
+    } else {
+      setSelectedCustomer(customer);
+      setSelectedProduct(null);
+      setSelectedJishaModel(null);
+    }
+    if (productCardRef.current) {
+      productCardRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
   };
 
   const handleProductClick = (product) => {
+    if (selectedCustomer === '自社' && !selectedJishaModel) {
+      // 「自社」が選択されており、まだ型名が選択されていない場合
+      setSelectedJishaModel(product); // クリックされたものを型名として設定
+      setSelectedProduct(null);
+      return;
+    }
+
+    // 最終的な商品が選択された場合
     setSelectedProduct(product);
-    // 商品が選択された時点で確定
-    const line = productsData.find(item => item.お客様 === selectedCustomer && item.商品名 === product)?.ライン || '';
-    onSelectComplete(selectedCustomer, product, line);
+    let finalCustomer = selectedCustomer;
+    let finalProduct = product;
+    let line = '';
+
+    if (selectedCustomer === '自社') {
+        // お客様が「自社」の場合、型名（selectedJishaModel）を使って商品データを検索
+        const productData = productsData.find(item => item.お客様 === selectedJishaModel && item.商品名 === product);
+        line = productData?.ライン || '';
+        finalCustomer = '自社'; // フォームに渡す顧客名は「自社」のままにする
+    } else {
+        const productData = productsData.find(item => item.お客様 === selectedCustomer && item.商品名 === product);
+        line = productData?.ライン || '';
+    }
+    
+    onSelectComplete(finalCustomer, finalProduct, line);
   };
 
-  const currentCustomers = customersByChar[selectedChar] || [];
-  const currentProducts = selectedCustomer 
-    ? productsData.filter(item => item.お客様 === selectedCustomer).map(item => item.商品名) 
-    : [];
+  const currentCustomers = (() => {
+    if (selectedChar === 'A-Z') {
+      const alphabetCustomers = productsData
+        .filter(item => /[a-zA-Z]/.test(item.かな))
+        .map(item => item.お客様);
+      return [...new Set(alphabetCustomers)];
+    }
+    return customersByChar[selectedChar] || [];
+  })();
+
+  const currentProducts = (() => {
+    if (!selectedCustomer) return [];
+    if (selectedCustomer === '自社') {
+      if (!selectedJishaModel) {
+        // 「自社」が選択されており、型名がまだ選択されていない場合は型名リストを返す
+        return customersByChar['自社'] || [];
+      } else {
+        // 型名が選択されている場合は、その型名に紐づく最終製品リストを返す
+        return productsData.filter(item => item.お客様 === selectedJishaModel).map(item => item.商品名);
+      }
+    }
+    // 通常の顧客選択フロー
+    return productsData.filter(item => item.お客様 === selectedCustomer).map(item => item.商品名);
+  })();
 
   return (
-    <Container fluid>
-      <Row className="mb-3 flex-nowrap">
-        <Col xs="auto">
+    <Container fluid style={{ height: '100%' }}> {/* Modal.Bodyの高さに合わせる */}
+      <Row className="flex-nowrap h-100"> {/* Rowも高さを100%にする */}
+        <Col xs="auto" className="d-flex flex-column">
           <h5 className="text-center">頭文字で絞り込み</h5>
-          {/* ひらがな表のレイアウト調整 */}
-          <div className="d-flex flex-column align-items-center">
+          <div className="d-flex flex-column align-items-center flex-grow-1 overflow-auto"> {/* ひらがな表のスクロール */}
             {hiraganaRows.map((row, rowIndex) => (
               <div key={rowIndex} className="d-flex justify-content-center">
                 {row.map((char, colIndex) => (
@@ -74,9 +131,9 @@ function CustomerSelect({ onSelectComplete }) {
                     <Button 
                       key={`${rowIndex}-${colIndex}`}
                       variant={selectedChar === char ? "primary" : "outline-secondary"} 
-                      onClick={() => { setSelectedChar(char); setSelectedCustomer(null); setSelectedProduct(null); }} 
+                      onClick={() => { setSelectedChar(char); setSelectedCustomer(null); setSelectedProduct(null); setSelectedJishaModel(null); }} 
                       className="m-1 p-3 fs-5" 
-                      style={{ minWidth: '60px' }} // ボタンの最小幅を確保
+                      style={{ minWidth: '60px' }}
                     >
                       {char}
                     </Button>
@@ -86,22 +143,32 @@ function CustomerSelect({ onSelectComplete }) {
                 ))}
               </div>
             ))}
-            <Button 
-              key="jisha-button" 
-              variant={selectedChar === '自' ? "primary" : "outline-secondary"} 
-              onClick={() => { setSelectedChar('自'); setSelectedCustomer(null); setSelectedProduct(null); }} 
-              className="m-1 p-3 fs-5" 
-              style={{ minWidth: '60px' }} // ボタンの最小幅を確保
-            >
-              自社
-            </Button>
+            <div className="d-flex justify-content-center mt-2">
+                <Button 
+                  variant={selectedChar === '自社' ? "primary" : "outline-secondary"} 
+                  onClick={() => { setSelectedChar('自社'); setSelectedCustomer('自社'); setSelectedProduct(null); setSelectedJishaModel(null); }} 
+                  className="m-1 p-3 fs-5" 
+                  style={{ minWidth: '60px' }}
+                >
+                  自社
+                </Button>
+                <Button 
+                  variant={selectedChar === 'A-Z' ? "primary" : "outline-secondary"} 
+                  onClick={() => { setSelectedChar('A-Z'); setSelectedCustomer(null); setSelectedProduct(null); setSelectedJishaModel(null); }} 
+                  className="m-1 p-3 fs-5" 
+                  style={{ minWidth: '60px' }}
+                >
+                  A-Z
+                </Button>
+            </div>
           </div>
         </Col>
 
-        <Col md={4}>
-          <Card className="shadow-sm h-100">
+        <Col className="d-flex flex-column" style={{ width: '30%', flex: '0 0 30%' }}> {/* 幅を固定 */}
+          <Card className="shadow-sm d-flex flex-column flex-grow-1">
             <Card.Header className="bg-info text-white">顧客リスト</Card.Header>
-            <ListGroup variant="flush" className="flex-grow-1" style={{ overflowY: 'auto' }}>
+            <Card.Body className="p-0 d-flex flex-column flex-grow-1">
+            <ListGroup variant="flush" className="flex-grow-1" style={{ height: '100%', overflowY: 'auto' }}>
               {currentCustomers.length > 0 ? (
                 currentCustomers.map(customer => (
                   <ListGroup.Item 
@@ -116,13 +183,27 @@ function CustomerSelect({ onSelectComplete }) {
                 ))
               ) : <ListGroup.Item className="text-muted py-3">該当なし</ListGroup.Item>}
             </ListGroup>
+            </Card.Body>
           </Card>
         </Col>
 
-        <Col md={6}>
-          <Card className="shadow-sm h-100">
-            <Card.Header className="bg-info text-white">商品リスト</Card.Header>
-            <ListGroup variant="flush" className="flex-grow-1" style={{ overflowY: 'auto' }}>
+        <Col className="d-flex flex-column" style={{ width: '45%', flex: '0 0 45%' }}> {/* 幅を固定 */}
+          <Card ref={productCardRef} className="shadow-sm d-flex flex-column flex-grow-1">
+            <Card.Header className="bg-info text-white d-flex justify-content-between align-items-center">
+                <span>
+                    {selectedCustomer === '自社' && selectedJishaModel 
+                        ? `${selectedJishaModel}の商品` 
+                        : '商品リスト'
+                    }
+                </span>
+                {selectedCustomer === '自社' && selectedJishaModel && (
+                    <Button variant="light" size="sm" onClick={() => setSelectedJishaModel(null)}>
+                        ← 型名選択に戻る
+                    </Button>
+                )}
+            </Card.Header>
+            <Card.Body className="p-0 d-flex flex-column flex-grow-1">
+            <ListGroup variant="flush" className="flex-grow-1" style={{ height: '100%', overflowY: 'auto' }}>
               {currentProducts.length > 0 ? (
                 currentProducts.map(product => (
                   <ListGroup.Item 
@@ -135,8 +216,9 @@ function CustomerSelect({ onSelectComplete }) {
                     {product}
                   </ListGroup.Item>
                 ))
-              ) : <ListGroup.Item className="text-muted py-3">顧客を選択してください</ListGroup.Item>}
+                            ) : <ListGroup.Item className="text-muted py-3">{selectedCustomer ? '商品がありません' : '顧客を選択してください'}</ListGroup.Item>}
             </ListGroup>
+            </Card.Body>
           </Card>
         </Col>
       </Row>

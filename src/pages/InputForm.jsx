@@ -288,7 +288,7 @@ const InputForm = forwardRef((props, ref) => {
         <Modal.Header closeButton>
           <Modal.Title>顧客・商品の選択</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body style={{ height: '600px' }}>
           <CustomerSelect onSelectComplete={handleSelectComplete} />
         </Modal.Body>
       </Modal>
