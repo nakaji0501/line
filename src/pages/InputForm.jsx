@@ -28,39 +28,35 @@ const DefectCounter = ({ label, count, onCountChange, isLargeButton = false }) =
   </Col>
 );
 
-const initialFormData = {
-  date: new Date().toISOString().slice(0, 10),
-  line: '',
-  worker: '',
-  inspector: '',
-  customer: '',
-  product: '',
-  startTime: '',
-  endTime: '',
-  plannedQuantity: '',
-  actualQuantity: '',
-  douNomi: '',
-  sokoNomi: '',
-  notes: ''
-};
-
-const initialProcessingDefects = {
-  douInsatsu: 0, douKizu: 0, douSonota: 0, sokoFuryo: 0, futaFuryo: 0
-};
-
-const initialInspectionDefects = {
-  douInsatsu: 0, douKizu: 0, sokoKizuHekomi: 0, sokoMaki: 0, sonota: 0
-};
-
-const InputForm = forwardRef((props, ref) => {
+const InputForm = forwardRef(({ onUnsavedChangesChange, formData, setFormData, processingDefects, setProcessingDefects, inspectionDefects, setInspectionDefects }, ref) => {
   // --- State管理 ---
   const [showCustomerModal, setShowCustomerModal] = useState(false);
-  const [formData, setFormData] = useState(initialFormData);
 
-  // 加工不良のstate
-  const [processingDefects, setProcessingDefects] = useState(initialProcessingDefects);
-  // 検査不良のstate
-  const [inspectionDefects, setInspectionDefects] = useState(initialInspectionDefects);
+  useEffect(() => {
+    // formData, processingDefects, inspectionDefects のいずれかが初期値と異なる場合にonUnsavedChangesChangeをtrueにする
+    const isFormDataChanged = JSON.stringify(formData) !== JSON.stringify({
+      date: new Date().toISOString().slice(0, 10),
+      line: '',
+      worker: '',
+      inspector: '',
+      customer: '',
+      product: '',
+      startTime: '',
+      endTime: '',
+      plannedQuantity: '',
+      actualQuantity: '',
+      douNomi: '',
+      sokoNomi: '',
+      notes: ''
+    });
+    const isProcessingDefectsChanged = JSON.stringify(processingDefects) !== JSON.stringify({
+      douInsatsu: 0, douKizu: 0, douSonota: 0, sokoFuryo: 0, futaFuryo: 0
+    });
+    const isInspectionDefectsChanged = JSON.stringify(inspectionDefects) !== JSON.stringify({
+      douInsatsu: 0, douKizu: 0, sokoKizuHekomi: 0, sokoMaki: 0, sonota: 0
+    });
+    onUnsavedChangesChange(isFormDataChanged || isProcessingDefectsChanged || isInspectionDefectsChanged);
+  }, [formData, processingDefects, inspectionDefects, onUnsavedChangesChange]);
 
   // --- 当日使用数の計算 ---
   const totalInspectionDefects = Object.values(inspectionDefects).reduce((sum, current) => sum + current, 0);
@@ -99,41 +95,30 @@ const InputForm = forwardRef((props, ref) => {
 
     if (!formData.customer || !formData.product) {
       alert('顧客名と商品名を入力してください。');
-      return;
-    }
-
-    if (!formData.endTime) {
-      alert('終了時刻を入力してください。');
-      return;
+      return false;
     }
 
     const today = new Date().toISOString().slice(0, 10);
     if (formData.date !== today) {
       alert('日付が今日の日付ではありません。今日の日付を選択してください。');
-      return;
+      return false;
     }
 
     const submissionData = { 
       ...formData, 
+      endTime: new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }),
       processingDefects, 
       inspectionDefects
     };
     console.log(submissionData);
     alert('データが保存されました（コンソールに出力）');
+    onUnsavedChangesChange(false); // 保存後に変更フラグをリセット
     // ここでFirebaseにデータを送信する処理を実装
-  };
-
-  const handleReset = () => {
-    if (window.confirm('リセットしますか？')) {
-      setFormData(initialFormData);
-      setProcessingDefects(initialProcessingDefects);
-      setInspectionDefects(initialInspectionDefects);
-    }
+    return true; // 保存成功
   };
 
   useImperativeHandle(ref, () => ({
-    submit: handleSubmit,
-    reset: handleReset
+    submit: handleSubmit
   }));
 
   // --- レンダリング ---
@@ -189,19 +174,10 @@ const InputForm = forwardRef((props, ref) => {
         </Col>
         <Col xs={6} sm={3} md={3}>
           <Form.Group>
-            <Form.Label className="mb-0 small">開始時間</Form.Label>
+            <Form.Label className="mb-0 small">開始時刻</Form.Label>
             <InputGroup size="sm">
               <Form.Control type="time" name="startTime" value={formData.startTime} onChange={handleChange} />
               <Button variant="outline-secondary" onClick={() => handleTimeClick('startTime')}>現時刻</Button>
-            </InputGroup>
-          </Form.Group>
-        </Col>
-        <Col xs={6} sm={3} md={3}>
-          <Form.Group>
-            <Form.Label className="mb-0 small">終了時間</Form.Label>
-            <InputGroup size="sm">
-              <Form.Control type="time" name="endTime" value={formData.endTime} onChange={handleChange} />
-              <Button variant="outline-secondary" onClick={() => handleTimeClick('endTime')}>現時刻</Button>
             </InputGroup>
           </Form.Group>
         </Col>

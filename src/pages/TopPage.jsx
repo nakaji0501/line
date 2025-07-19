@@ -7,7 +7,7 @@ function TopPage() {
     { id: 1, line: 'A', customer: 'あいだ産業', product: '部品1', actualQuantity: 1200, plannedQuantity: 1500 },
     { id: 2, line: 'B', customer: '自社', product: 'バニラ', actualQuantity: 5000, plannedQuantity: 6000 },
     { id: 3, line: 'A', customer: 'かとう金属', product: '製品A', actualQuantity: 800, plannedQuantity: 1000 },
-  ].sort((a, b) => b.line.localeCompare(a.line));
+  ].sort((a, b) => a.line.localeCompare(b.line));
 
   const handleRefresh = () => {
     alert('データを更新しました（実際にはまだ同期機能はありません）');
