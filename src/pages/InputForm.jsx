@@ -28,33 +28,39 @@ const DefectCounter = ({ label, count, onCountChange, isLargeButton = false }) =
   </Col>
 );
 
+const initialFormData = {
+  date: new Date().toISOString().slice(0, 10),
+  line: '',
+  worker: '',
+  inspector: '',
+  customer: '',
+  product: '',
+  startTime: '',
+  endTime: '',
+  plannedQuantity: '',
+  actualQuantity: '',
+  douNomi: '',
+  sokoNomi: '',
+  notes: ''
+};
+
+const initialProcessingDefects = {
+  douInsatsu: 0, douKizu: 0, douSonota: 0, sokoFuryo: 0, futaFuryo: 0
+};
+
+const initialInspectionDefects = {
+  douInsatsu: 0, douKizu: 0, sokoKizuHekomi: 0, sokoMaki: 0, sonota: 0
+};
+
 const InputForm = forwardRef((props, ref) => {
   // --- State管理 ---
   const [showCustomerModal, setShowCustomerModal] = useState(false);
-  const [formData, setFormData] = useState({
-    date: new Date().toISOString().slice(0, 10),
-    line: '',
-    worker: '',
-    inspector: '',
-    customer: '',
-    product: '',
-    startTime: '',
-    endTime: '',
-    plannedQuantity: '',
-    actualQuantity: '',
-    douNomi: '',
-    sokoNomi: '',
-    notes: ''
-  });
+  const [formData, setFormData] = useState(initialFormData);
 
   // 加工不良のstate
-  const [processingDefects, setProcessingDefects] = useState({
-    douInsatsu: 0, douKizu: 0, douSonota: 0, sokoFuryo: 0, futaFuryo: 0
-  });
+  const [processingDefects, setProcessingDefects] = useState(initialProcessingDefects);
   // 検査不良のstate
-  const [inspectionDefects, setInspectionDefects] = useState({
-    douInsatsu: 0, douKizu: 0, sokoKizuHekomi: 0, sokoMaki: 0, sonota: 0
-  });
+  const [inspectionDefects, setInspectionDefects] = useState(initialInspectionDefects);
 
   // --- 当日使用数の計算 ---
   const totalInspectionDefects = Object.values(inspectionDefects).reduce((sum, current) => sum + current, 0);
@@ -90,6 +96,23 @@ const InputForm = forwardRef((props, ref) => {
 
   const handleSubmit = (e) => {
     if (e) e.preventDefault();
+
+    if (!formData.customer || !formData.product) {
+      alert('顧客名と商品名を入力してください。');
+      return;
+    }
+
+    if (!formData.endTime) {
+      alert('終了時刻を入力してください。');
+      return;
+    }
+
+    const today = new Date().toISOString().slice(0, 10);
+    if (formData.date !== today) {
+      alert('日付が今日の日付ではありません。今日の日付を選択してください。');
+      return;
+    }
+
     const submissionData = { 
       ...formData, 
       processingDefects, 
@@ -100,8 +123,17 @@ const InputForm = forwardRef((props, ref) => {
     // ここでFirebaseにデータを送信する処理を実装
   };
 
+  const handleReset = () => {
+    if (window.confirm('リセットしますか？')) {
+      setFormData(initialFormData);
+      setProcessingDefects(initialProcessingDefects);
+      setInspectionDefects(initialInspectionDefects);
+    }
+  };
+
   useImperativeHandle(ref, () => ({
-    submit: handleSubmit
+    submit: handleSubmit,
+    reset: handleReset
   }));
 
   // --- レンダリング ---
