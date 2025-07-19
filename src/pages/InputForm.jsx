@@ -1,3 +1,6 @@
+import { db } from '../firebaseConfig';
+import { collection, addDoc } from "firebase/firestore";
+
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Form, Button, Row, Col, InputGroup, Modal, Card } from 'react-bootstrap';
 import CustomerSelect from './CustomerSelect';
@@ -7,62 +10,26 @@ const workers = ['加藤浩', '永吉則久', '藤田蓮', '中島拓海', '', '
 const inspectors = ['林洋子', '相浦絵美子', '石川美穂', '渡部加奈子', '中島里美', '重水明日香', '伊藤枝里子', '', '加藤浩', '永吉則久', '藤田蓮', '中島拓海'];
 
 // --- 不良数カウンターコンポーネント ---
-const DefectCounter = ({ label, count, onCountChange, isLargeButton = false }) => {
-  const [displayValue, setDisplayValue] = useState(count.toString());
-
-  useEffect(() => {
-    setDisplayValue(count.toString());
-  }, [count]);
-
-  const handleFocus = (e) => {
-    if (parseInt(e.target.value) === 0) {
-      setDisplayValue('');
-    }
-  };
-
-  const handleBlur = (e) => {
-    if (e.target.value === '' || parseInt(e.target.value) < 0) {
-      onCountChange(0);
-      setDisplayValue('0'); // 0に戻す
-    } else {
-      onCountChange(parseInt(e.target.value));
-      setDisplayValue(parseInt(e.target.value).toString()); // 整数に変換して表示
-    }
-  };
-
-  const handleChange = (e) => {
-    const value = e.target.value;
-    setDisplayValue(value);
-    if (value === '' || parseInt(value) < 0) {
-      onCountChange(0);
-    } else {
-      onCountChange(parseInt(value));
-    }
-  };
-
-  return (
-    <Col xs={isLargeButton ? 12 : 6} sm={isLargeButton ? 12 : 4} md={isLargeButton ? 2 : 2} className="mb-1"> 
-      <Card className="h-100 shadow-sm">
-        <Card.Body className="p-1 d-flex flex-column justify-content-between"> 
-          <Card.Title className="text-center mb-1" style={{ fontSize: isLargeButton ? '1.5rem' : '0.9rem' }}>{label}</Card.Title> 
-          <InputGroup size={isLargeButton ? "lg" : "sm"}> 
-            <Button variant="outline-danger" onClick={() => onCountChange(Math.max(0, count - 1))} style={isLargeButton ? { fontSize: '2.5rem', height: '160px' } : {}}>-</Button> 
-            <Form.Control 
-              type="number" 
-              value={displayValue} 
-              onChange={handleChange} 
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              className="text-center fw-bold" 
-              style={isLargeButton ? { fontSize: '2.5rem', height: '160px' } : {}}
-            />
-            <Button variant="outline-success" onClick={() => onCountChange(count + 1)} style={isLargeButton ? { fontSize: '2.5rem', height: '160px' } : {}}>+</Button>
-          </InputGroup>
-        </Card.Body>
-      </Card>
-    </Col>
-  );
-};
+const DefectCounter = ({ label, count, onCountChange, isLargeButton = false }) => (
+  <Col xs={isLargeButton ? 12 : 6} sm={isLargeButton ? 12 : 4} md={isLargeButton ? 2 : 2} className="mb-1"> 
+    <Card className="h-100 shadow-sm">
+      <Card.Body className="p-1 d-flex flex-column justify-content-between"> 
+        <Card.Title className="text-center mb-1" style={{ fontSize: isLargeButton ? '1.5rem' : '0.9rem' }}>{label}</Card.Title> 
+        <InputGroup size={isLargeButton ? "lg" : "sm"}> 
+          <Button variant="outline-danger" onClick={() => onCountChange(Math.max(0, count - 1))} style={isLargeButton ? { fontSize: '2.5rem', height: '160px' } : {}}>-</Button> 
+          <Form.Control 
+            type="number" 
+            value={count} 
+            onChange={(e) => onCountChange(parseInt(e.target.value) || 0)} 
+            className="text-center fw-bold" 
+            style={isLargeButton ? { fontSize: '2.5rem', height: '160px' } : {}}
+          />
+          <Button variant="outline-success" onClick={() => onCountChange(count + 1)} style={isLargeButton ? { fontSize: '2.5rem', height: '160px' } : {}}>+</Button>
+        </InputGroup>
+      </Card.Body>
+    </Card>
+  </Col>
+);
 
 const InputForm = forwardRef(({ onUnsavedChangesChange, formData, setFormData, processingDefects, setProcessingDefects, inspectionDefects, setInspectionDefects }, ref) => {
   // --- State管理 ---
@@ -126,7 +93,7 @@ const InputForm = forwardRef(({ onUnsavedChangesChange, formData, setFormData, p
     setShowCustomerModal(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     if (e) e.preventDefault();
 
     if (!formData.customer || !formData.product) {
@@ -146,11 +113,17 @@ const InputForm = forwardRef(({ onUnsavedChangesChange, formData, setFormData, p
       processingDefects, 
       inspectionDefects
     };
-    console.log(submissionData);
-    alert('データが保存されました（コンソールに出力）');
-    onUnsavedChangesChange(false); // 保存後に変更フラグをリセット
-    // ここでFirebaseにデータを送信する処理を実装
-    return true; // 保存成功
+    try {
+      const docRef = await addDoc(collection(db, "productionRecords"), submissionData);
+      console.log("Document written with ID: ", docRef.id);
+      alert('データが保存されました！');
+      onUnsavedChangesChange(false); // 保存後に変更フラグをリセット
+      return true; // 保存成功
+    } catch (e) {
+      console.error("Error adding document: ", e);
+      alert('データの保存中にエラーが発生しました。');
+      return false; // 保存失敗
+    }
   };
 
   useImperativeHandle(ref, () => ({

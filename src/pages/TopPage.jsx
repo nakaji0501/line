@@ -1,17 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Card, ListGroup, Button, Row, Col } from 'react-bootstrap';
+import { db } from '../firebaseConfig';
+import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
 
-function TopPage() {
-  // ダミーデータ
-  const dailyRecords = [
-    { id: 1, line: 'A', customer: 'あいだ産業', product: '部品1', actualQuantity: 1200, plannedQuantity: 1500 },
-    { id: 2, line: 'B', customer: '自社', product: 'バニラ', actualQuantity: 5000, plannedQuantity: 6000 },
-    { id: 3, line: 'A', customer: 'かとう金属', product: '製品A', actualQuantity: 800, plannedQuantity: 1000 },
-  ].sort((a, b) => a.line.localeCompare(b.line));
+function TopPage({ handleNewInput }) {
+  const [dailyRecords, setDailyRecords] = useState([]);
+
+  useEffect(() => {
+    const q = query(collection(db, "productionRecords"), orderBy("line", "asc"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const records = [];
+      querySnapshot.forEach((doc) => {
+        records.push({ id: doc.id, ...doc.data() });
+      });
+      setDailyRecords(records);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleRefresh = () => {
-    alert('データを更新しました（実際にはまだ同期機能はありません）');
-    // ここにデータ更新ロジックを実装
+    alert('データを更新しました（実際にはリアルタイムで同期されています）');
   };
 
   return (

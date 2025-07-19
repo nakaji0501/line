@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import InputForm from './pages/InputForm';
@@ -6,6 +6,8 @@ import TopPage from './pages/TopPage';
 import ShyoushoPage from './pages/ShyoushoPage';
 import KakuhoPage from './pages/KakuhoPage';
 import DataAddPage from './pages/DataAddPage'; // DataAddPageをインポート
+import { auth } from './firebaseConfig.jsx';
+import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth"; // Firebase Auth関連をインポート
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -37,14 +39,42 @@ const AppContent = () => {
   const navigate = useNavigate();
   const formRef = useRef();
   const [hasUnsavedChangesInForm, setHasUnsavedChangesInForm] = useState(false);
+  const [user, setUser] = useState(null); // ユーザー状態を管理
 
   const [formData, setFormData] = useState(initialFormData);
   const [processingDefects, setProcessingDefects] = useState(initialProcessingDefects);
   const [inspectionDefects, setInspectionDefects] = useState(initialInspectionDefects);
 
-  const handleSave = () => {
+  // ログイン状態の監視
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      setUser(user);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleGoogleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.error("Googleログインエラー: ", error);
+      alert("Googleログインに失敗しました。");
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("ログアウトエラー: ", error);
+      alert("ログアウトに失敗しました。");
+    }
+  };
+
+  const handleSave = async () => {
     if (formRef.current) {
-      const isSaved = formRef.current.submit();
+      const isSaved = await formRef.current.submit();
       if (isSaved) {
         setFormData(initialFormData);
         setProcessingDefects(initialProcessingDefects);
@@ -57,24 +87,6 @@ const AppContent = () => {
     }
   };
 
-  const handleNewInput = () => {
-    if (hasUnsavedChangesInForm) {
-      if (window.confirm('入力フォームに未保存のデータがあります。リセットして新規入力しますか？')) {
-        setFormData(initialFormData);
-        setProcessingDefects(initialProcessingDefects);
-        setInspectionDefects(initialInspectionDefects);
-        setHasUnsavedChangesInForm(false);
-        navigate('/new'); // 入力フォームへ移動
-      }
-    } else {
-      setFormData(initialFormData);
-      setProcessingDefects(initialProcessingDefects);
-      setInspectionDefects(initialInspectionDefects);
-      setHasUnsavedChangesInForm(false);
-      navigate('/new'); // 入力フォームへ移動
-    }
-  };
-
   const handleReset = () => {
     if (window.confirm('リセットしますか？')) {
       setFormData(initialFormData);
@@ -83,6 +95,24 @@ const AppContent = () => {
       setHasUnsavedChangesInForm(false);
     }
   };
+
+  const handleNewInput = useCallback(() => {
+    const resetState = () => {
+      setFormData(initialFormData);
+      setProcessingDefects(initialProcessingDefects);
+      setInspectionDefects(initialInspectionDefects);
+      setHasUnsavedChangesInForm(false);
+      navigate('/new');
+    };
+
+    if (hasUnsavedChangesInForm) {
+      if (window.confirm('入力フォームに未保存のデータがあります。リセットして新規入力しますか？')) {
+        resetState();
+      }
+    } else {
+      resetState();
+    }
+  }, [hasUnsavedChangesInForm, navigate]);
 
   return (
     <div className="App d-flex flex-column vh-100">
@@ -116,6 +146,13 @@ const AppContent = () => {
                 <Button variant="success" onClick={handleNewInput}>新規入力</Button>
               </div>
             )}
+            <div className="ms-auto">
+              {user ? (
+                <Button variant="outline-light" onClick={handleLogout}>ログアウト ({user.displayName})</Button>
+              ) : (
+                <Button variant="outline-light" onClick={handleGoogleLogin}>Googleログイン</Button>
+              )}
+            </div>
           </Navbar.Collapse>
         </Container>
       </Navbar>
