@@ -7,26 +7,62 @@ const workers = ['加藤浩', '永吉則久', '藤田蓮', '中島拓海', '', '
 const inspectors = ['林洋子', '相浦絵美子', '石川美穂', '渡部加奈子', '中島里美', '重水明日香', '伊藤枝里子', '', '加藤浩', '永吉則久', '藤田蓮', '中島拓海'];
 
 // --- 不良数カウンターコンポーネント ---
-const DefectCounter = ({ label, count, onCountChange, isLargeButton = false }) => (
-  <Col xs={isLargeButton ? 12 : 6} sm={isLargeButton ? 12 : 4} md={isLargeButton ? 2 : 2} className="mb-1"> 
-    <Card className="h-100 shadow-sm">
-      <Card.Body className="p-1 d-flex flex-column justify-content-between"> 
-        <Card.Title className="text-center mb-1" style={{ fontSize: isLargeButton ? '1.5rem' : '0.9rem' }}>{label}</Card.Title> 
-        <InputGroup size={isLargeButton ? "lg" : "sm"}> 
-          <Button variant="outline-danger" onClick={() => onCountChange(Math.max(0, count - 1))} style={isLargeButton ? { fontSize: '2.5rem', height: '160px' } : {}}>-</Button> 
-          <Form.Control 
-            type="number" 
-            value={count} 
-            onChange={(e) => onCountChange(parseInt(e.target.value) || 0)} 
-            className="text-center fw-bold" 
-            style={isLargeButton ? { fontSize: '2.5rem', height: '160px' } : {}}
-          />
-          <Button variant="outline-success" onClick={() => onCountChange(count + 1)} style={isLargeButton ? { fontSize: '2.5rem', height: '160px' } : {}}>+</Button>
-        </InputGroup>
-      </Card.Body>
-    </Card>
-  </Col>
-);
+const DefectCounter = ({ label, count, onCountChange, isLargeButton = false }) => {
+  const [displayValue, setDisplayValue] = useState(count.toString());
+
+  useEffect(() => {
+    setDisplayValue(count.toString());
+  }, [count]);
+
+  const handleFocus = (e) => {
+    if (parseInt(e.target.value) === 0) {
+      setDisplayValue('');
+    }
+  };
+
+  const handleBlur = (e) => {
+    if (e.target.value === '' || parseInt(e.target.value) < 0) {
+      onCountChange(0);
+      setDisplayValue('0'); // 0に戻す
+    } else {
+      onCountChange(parseInt(e.target.value));
+      setDisplayValue(parseInt(e.target.value).toString()); // 整数に変換して表示
+    }
+  };
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setDisplayValue(value);
+    if (value === '' || parseInt(value) < 0) {
+      onCountChange(0);
+    } else {
+      onCountChange(parseInt(value));
+    }
+  };
+
+  return (
+    <Col xs={isLargeButton ? 12 : 6} sm={isLargeButton ? 12 : 4} md={isLargeButton ? 2 : 2} className="mb-1"> 
+      <Card className="h-100 shadow-sm">
+        <Card.Body className="p-1 d-flex flex-column justify-content-between"> 
+          <Card.Title className="text-center mb-1" style={{ fontSize: isLargeButton ? '1.5rem' : '0.9rem' }}>{label}</Card.Title> 
+          <InputGroup size={isLargeButton ? "lg" : "sm"}> 
+            <Button variant="outline-danger" onClick={() => onCountChange(Math.max(0, count - 1))} style={isLargeButton ? { fontSize: '2.5rem', height: '160px' } : {}}>-</Button> 
+            <Form.Control 
+              type="number" 
+              value={displayValue} 
+              onChange={handleChange} 
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              className="text-center fw-bold" 
+              style={isLargeButton ? { fontSize: '2.5rem', height: '160px' } : {}}
+            />
+            <Button variant="outline-success" onClick={() => onCountChange(count + 1)} style={isLargeButton ? { fontSize: '2.5rem', height: '160px' } : {}}>+</Button>
+          </InputGroup>
+        </Card.Body>
+      </Card>
+    </Col>
+  );
+};
 
 const InputForm = forwardRef(({ onUnsavedChangesChange, formData, setFormData, processingDefects, setProcessingDefects, inspectionDefects, setInspectionDefects }, ref) => {
   // --- State管理 ---
@@ -269,7 +305,7 @@ const InputForm = forwardRef(({ onUnsavedChangesChange, formData, setFormData, p
         </Col>
         <Col xs={12} md={3}>
           <Card className="shadow-sm h-100">
-            <Card.Header className="bg-secondary text-white py-2">当日使用数</Card.Header>
+            <Card.Header className="bg-secondary text-white py-2">当日使用数(生産数＋不良数)</Card.Header>
             <Card.Body className="py-2">
               <Row className="mb-2 align-items-center">
                 <Form.Label column sm={5} className="text-end fw-bold">胴:</Form.Label>
