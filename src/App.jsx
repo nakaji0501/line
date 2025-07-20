@@ -157,15 +157,22 @@ const AppContent = () => {
         </Container>
       </Navbar>
 
-      <Container fluid className="flex-grow-1 d-flex flex-column py-3">
-        <Routes>
-          <Route path="/" element={<TopPage handleNewInput={handleNewInput} />} />
-          <Route path="/new" element={<InputForm ref={formRef} onUnsavedChangesChange={setHasUnsavedChangesInForm} formData={formData} setFormData={setFormData} processingDefects={processingDefects} setProcessingDefects={setProcessingDefects} inspectionDefects={inspectionDefects} setInspectionDefects={setInspectionDefects} />} />
-          <Route path="/shyousho" element={<ShyoushoPage />} />
-          <Route path="/data-add" element={<DataAddPage />} />
-          <Route path="/kakuho1" element={<KakuhoPage pageName="拡張1" />} />
-        </Routes>
-      </Container>
+      {user ? (
+        <Container fluid className="flex-grow-1 d-flex flex-column py-3">
+          <Routes>
+            <Route path="/" element={<TopPage handleNewInput={handleNewInput} />} />
+            <Route path="/new" element={<InputForm ref={formRef} onUnsavedChangesChange={setHasUnsavedChangesInForm} formData={formData} setFormData={setFormData} processingDefects={processingDefects} setProcessingDefects={setProcessingDefects} inspectionDefects={inspectionDefects} setInspectionDefects={setInspectionDefects} />} />
+            <Route path="/shyousho" element={<ShyoushoPage />} />
+            <Route path="/data-add" element={<DataAddPage />} />
+            <Route path="/kakuho1" element={<KakuhoPage pageName="拡張1" />} />
+          </Routes>
+        </Container>
+      ) : (
+        <Container fluid className="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+          <h2 className="mb-3">ログインしてください</h2>
+          <Button variant="primary" onClick={handleGoogleLogin}>Googleでログイン</Button>
+        </Container>
+      )}
     </div>
   );
 }
