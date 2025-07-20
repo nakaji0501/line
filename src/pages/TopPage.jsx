@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Card, ListGroup, Button, Row, Col } from 'react-bootstrap';
-import { db } from '../firebaseConfig';
+import { db } from '../firebaseConfig.js';
 import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
 
 function TopPage({ handleNewInput }) {

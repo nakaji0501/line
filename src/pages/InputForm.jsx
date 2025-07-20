@@ -1,4 +1,4 @@
-import { db } from '../firebaseConfig';
+import { db } from '../firebaseConfig.js';
 import { collection, addDoc } from "firebase/firestore";
 
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
